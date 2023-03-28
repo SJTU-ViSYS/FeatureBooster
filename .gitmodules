@@ -1,0 +1,6 @@
+[submodule "extractors/ALIKE"]
+	path = extractors/ALIKE
+	url = https://github.com/Shiaoming/ALIKE/tree/77dc2597d7a6d23e8b84f4d994b8726b2815ba51
+[submodule "extractors/SuperPointPretrainedNetwork"]
+	path = extractors/SuperPointPretrainedNetwork
+	url = https://github.com/magicleap/SuperPointPretrainedNetwork/tree/1fda796addba9b6f8e79d586a3699700a86b1cea

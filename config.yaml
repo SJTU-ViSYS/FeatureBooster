@@ -1,0 +1,63 @@
+ORB+Boost-B:
+    keypoint_dim: 4
+    keypoint_encoder: [32, 64, 128, 256]
+    descriptor_dim: 256
+    descriptor_encoder: [512, 256]
+    Attentional_layers: 4
+    last_activation: 'tanh'
+    l2_normalization: false
+    output_dim: 256
+SIFT+Boost-F: 
+    keypoint_dim: 4
+    keypoint_encoder: [32, 64, 128, 128]
+    descriptor_encoder: [256, 128]
+    descriptor_dim: 128
+    Attentional_layers: 4
+    last_activation:
+    l2_normalization: true
+    output_dim: 128
+SIFT+Boost-B: 
+    keypoint_dim: 4
+    keypoint_encoder: [32, 64, 128, 128]
+    descriptor_encoder: [256, 128]
+    descriptor_dim: 128
+    Attentional_layers: 4
+    last_activation: 'tanh'
+    l2_normalization: false
+    output_dim: 256
+SuperPoint+Boost-F:
+    keypoint_dim: 3
+    keypoint_encoder: [32, 64, 128, 256]
+    descriptor_encoder: [256, 256]
+    descriptor_dim: 256
+    Attentional_layers: 9
+    last_activation:
+    l2_normalization: true
+    output_dim: 256
+SuperPoint+Boost-B:
+    keypoint_dim: 3
+    keypoint_encoder: [32, 64, 128, 256]
+    descriptor_encoder: [256, 256]
+    descriptor_dim: 256
+    Attentional_layers: 9
+    last_activation: 'tanh'
+    l2_normalization: false
+    output_dim: 256
+ALIKE+Boost-F: 
+    keypoint_dim: 3
+    keypoint_encoder: [32, 64, 128, 128]
+    descriptor_encoder: [256, 128]
+    descriptor_dim: 128
+    Attentional_layers: 9
+    last_activation:
+    l2_normalization: true
+    output_dim: 128
+ALIKE+Boost-B: 
+    keypoint_dim: 3
+    keypoint_encoder: [32, 64, 128, 128]
+    descriptor_encoder: [256, 128]
+    descriptor_dim: 128
+    Attentional_layers: 9
+    last_activation: 'tanh'
+    l2_normalization: false
+    output_dim: 256
