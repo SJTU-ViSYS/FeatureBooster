@@ -4,6 +4,3 @@
 [submodule "extractors/SuperPointPretrainedNetwork"]
 	path = extractors/SuperPointPretrainedNetwork
 	url = https://github.com/magicleap/SuperPointPretrainedNetwork.git
-[submodule "extractors/SuperGluePretrainedNetwork"]
-	path = extractors/SuperGluePretrainedNetwork
-	url = https://github.com/magicleap/SuperPointPretrainedNetwork.git
