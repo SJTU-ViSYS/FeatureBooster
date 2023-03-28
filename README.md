@@ -89,4 +89,4 @@ bash download.sh
 ```
 
 ## Acknowledgement
-We borrowed a lot of codes from [D2-Net](https://github.com/mihaidusmanu/d2-net). Thanks for [Mihai Dusmanu](https://github.com/mihaidusmanu)'s excellent works!
+We borrowed a lot of codes from [D2-Net](https://github.com/mihaidusmanu/d2-net) and [SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork). Thanks for their excellent works!
