@@ -1,3 +1,14 @@
+# # we recommand use xxx+Boost-F and xxx+Boost-B to represent the float and binary boosted feature of xxx
+# Name_of_your_boosted_feat: # name likes ORB+Boost-B
+#     keypoint_dim: # the dimansion of the geomerty propetry 
+#     keypoint_encoder: # list likes [32, 64, 128, 256]
+#     descriptor_dim: # the dimansion of the descriptor
+#     descriptor_encoder: # list likes [512, 256]
+#     Attentional_layers: # the number of attentional layer
+#     last_activation: # the type of last activation.
+#     l2_normalization: # whether to use l2 normalization
+#     output_dim: # the dimansion of boosted feature
+
 ORB+Boost-B:
     keypoint_dim: 4
     keypoint_encoder: [32, 64, 128, 256]

@@ -15,14 +15,14 @@ FeatureBooster is a research project with Midea Corporate Research Center. This 
 
 ## Prerequisites
 
-**Step1**: Cloning the repository and creating a virtual environment
+**Step1**: Clone the repository and create a virtual environment
 ```bash
 git clone --recursive https://github.com/SJTU-ViSYS/FeatureBooster.git
 cd FeatureBooster/
 conda env create -f environment.yml
 conda activate featurebooster
 ```
-**Step2**: Installing pyCOLMAP for SIFT extractor. Please following the instruction [here](https://github.com/colmap/pycolmap#building-from-source). 
+**Step2**: Install pyCOLMAP for SIFT extractor. Please follow the instruction [here](https://github.com/colmap/pycolmap#building-from-source). 
 
 **Step3**: Build the ORBSLAM2 features
 ```bash
@@ -58,8 +58,8 @@ The trained weights of FeatureBoosters for different descriptors are provided in
 
 The output format is [`npz`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez.html) and the output feature files contain two arrays: 
 
-- `keypoints` [`N x M`] array containing the positions of keypoints `x, y` and other geometric properties, such as the scales, the detection score, the oriention.
-- `descriptors` [`N x D`] array containing the descriptors. For real-valued descriptors, the data type of elements in this array is `np.float32`. For binary descriptor, the type is `np.uint8`.
+- `keypoints` [`N x M`] array contains the positions of keypoints `x, y` and other geometric properties, such as the scales, the detection score, the oriention.
+- `descriptors` [`N x D`] array contains the descriptors. For real-valued descriptors, the data type of elements in this array is `np.float32`. For binary descriptor, the type is `np.uint8`.
 
 ORB+Boost-B features for HPatches dataset can be extracted by running:
 
@@ -67,15 +67,87 @@ ORB+Boost-B features for HPatches dataset can be extracted by running:
 python extract_features.py --descriptor ORB+Boost-B --image_list_file image_list_hpatches_sequences.txt
 ```
 
+## Training
+
+### Dataset Download and Preprocessing
+
+#### 1.MegaDepth
+
+Download the [MegaDepth](http://www.cs.cornell.edu/projects/megadepth/) to your folder `/path/to/megadepth` and preprocess the dataset for training:
+
+```bash
+cd datasets/megadepth_utils
+python undistort_reconstructions.py --colmap_path /path/to/colmap/executable --base_path /path/to/megadepth
+bash preprocess_undistorted_megadepth.sh /path/to/megadepth /path/to/preprocessing/output
+```
+#### 2.MS COCO（optional）
+
+Download the MS COCO (including [train2014](http://images.cocodataset.org/zips/train2014.zip) and [val2014](http://images.cocodataset.org/zips/val2014.zip)) and extract to your folder `/path/to/ms_cooc`.
+
+### Launching Training
+
+We provide two training scripts. One is for launching the training process with local feature extraction throughout training, and the other one is for launching the training process with pre-extracted local features.
+
+*Note: If the latter training scripts needs to match the training data volume of the former, it demands a lot of storage space. However, the training time for the latter is significantly shorter than the former.*
+
+#### 1.Training while running the local feature extraction
+
+```bash
+python train.py --descriptor feature --dataset_path /path/to/megadepth \
+       --scene_info_path /path/to/preprocessing/output --config config.yaml
+```
+
+*Note: This training scripts currently only supports the MegaDepth dataset. `/path/to/preprocessing/output` is the output folder in [MegaDepth Preprocessing](#1megadepth).*
+
+#### 2.Training with pre-extracted local feature
+
+**Step1**: pre-extracting the local features
+```bash
+cd datasets/
+# for megadepth
+python preprocess_datasets.py --descriptor feature --dataset_name megadepth \
+       --dataset_path /path/to/megadepth --scene_info_path /path/to/preprocessing/output \
+       --data_type type(train or val) --output_path /path/to/output --num_kps 2048
+# for coco
+python preprocess_datasets.py --descriptor feature --dataset_name coco \
+       --dataset_path /path/to/coco --data_type type(train or val) \
+       --output_path /path/to/output --num_kps 2048
+```
+**Step2**: launching the training
+```bash
+python train_pre.py --descriptor feature --dataset_path /path/to/output --config config.yaml
+```
+
+### Training the ***FeatureBooster*** for your own local feature
+
+**Step1**: In `config.yaml`, fill the details of the ***FeatureBooster*** for the local feature in according to the following format:
+```yaml
+# we recommand use xxx+Boost-F and xxx+Boost-B to represent the float and binary boosted feature of xxx
+Name_of_your_boosted_feat: # name likes ORB+Boost-B
+    keypoint_dim: # the dimansion of the geomerty propetry 
+    keypoint_encoder: # list likes [32, 64, 128, 256]
+    descriptor_dim: # the dimansion of the descriptor
+    descriptor_encoder: # list likes [512, 256]
+    Attentional_layers: # the number of attentional layer
+    last_activation: # the type of last activation.
+    l2_normalization: # whether to use l2 normalization
+    output_dim: # the dimansion of boosted feature
+```
+
+**Step2**: In `lib/datatsets.py` and `datasets/preprocess_datasets.py`, add the corresponding feature extraction code in the respective section.
+
+**Step3**: follow the instrction on [Launching Training](#launching-training) and replace the keyword `feature` with your own feature named in `config.yaml`. 
+
 ## Evaluation on Hpatches
-**Step1**: Downloading the [HPatches dataset](https://github.com/hpatches/hpatches-dataset) 
+
+**Step1**: Download the [HPatches dataset](https://github.com/hpatches/hpatches-dataset) 
 ```bash
 cd hpatches_sequences
 bash download.sh
 ```
-**Step2**: Extracting the features following the instruction in [Feature extraction](#feature-extraction).
+**Step2**: Extract the features following the instruction in [Feature extraction](#feature-extraction).
 
-**Step3**: Running the notebook `hpatches_sequences/HPatches-Sequences-Matching-Benchmark.ipynb`. The new methods can be added in cell 4 of the notebook, while the features are supposed to be stored in the [`npz`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez.html) format following the description on [Feature extraction](#feature-extraction).
+**Step3**: Run the notebook `hpatches_sequences/HPatches-Sequences-Matching-Benchmark.ipynb`. The new methods can be added in cell 4 of the notebook, while the features are supposed to be stored in the [`npz`](https://docs.scipy.org/doc/numpy/reference/generated/numpy.savez.html) format following the description on [Feature extraction](#feature-extraction).
 
 ## BibTex Citation
 
@@ -89,4 +161,5 @@ bash download.sh
 ```
 
 ## Acknowledgement
+
 We borrowed a lot of codes from [D2-Net](https://github.com/mihaidusmanu/d2-net) and [SuperGluePretrainedNetwork](https://github.com/magicleap/SuperGluePretrainedNetwork). Thanks for their excellent works!
